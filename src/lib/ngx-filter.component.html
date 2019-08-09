@@ -1,0 +1,61 @@
+<form 
+[formGroup]="form" 
+    novalidate>
+    <div class="row d-flex align-items-end">
+        <!-- Field -->
+        <div class="col-sm-5 col-md-3 col-xl-2 form-group">
+            <label [for]="controlDefs.FIELD">Campo</label>
+            <select 
+                class="form-control" 
+                [ngClass]="{ 'is-invalid': validate(controlDefs.FIELD) }"
+                [id]="controlDefs.FIELD"
+                [formControlName]="controlDefs.FIELD"
+                [compareWith]="compareField">
+                <option *ngFor="let field of fields" [ngValue]="field">{{field.label}}</option>
+            </select>
+        </div>
+        <!-- Condição -->
+        <div class="col-sm-4 col-md-2 form-group">
+            <label [for]="controlDefs.OPERATOR">Condição</label>
+            <select 
+                class="form-control" 
+                [ngClass]="{ 'is-invalid': validate(controlDefs.OPERATOR) }"
+                [id]="controlDefs.OPERATOR"
+                [formControlName]="controlDefs.OPERATOR">
+                <option *ngFor="let operator of operators" [ngValue]="operator">{{operator.label}}</option>
+            </select>
+        </div>
+        <!-- Valor do filtro -->
+        <div class="col-sm-9 col-md-4 col-lg-5 col-xl-6 form-group">
+            <label [for]="controlDefs.VALUE">Contendo</label>
+            <div class="input-group">
+                <input 
+                    type="text" 
+                    class="form-control" 
+                    [id]="controlDefs.VALUE" 
+                    [formControlName]="controlDefs.VALUE"
+                    placeholder="Critério do filtro"
+                    (keyup)="onKeyUpValue($event)">
+                    <div class="input-group-prepend">
+                        <button 
+                            class="input-group-text"
+                            (click)="onAddFilter()">
+                            <i class="fa fa-plus"></i>
+                        </button>
+                    </div>
+              </div>
+            </div>
+        <div class="col-sm-3 col-md-3 col-lg-2 form-group">
+            <button
+                class="btn btn-primary btn-block" 
+                (click)="onFilter()">
+                <i class="fa fa-filter"></i>
+                FILTRAR
+            </button>
+        </div>
+        <div class="chip-list">
+            <chip *ngFor="let filter of filters"
+            [filter]="filter" (remove)="onRemove($event)"></chip>
+        </div>
+    </div>
+</form>

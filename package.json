@@ -1,0 +1,8 @@
+{
+  "name": "ngx-filter",
+  "version": "0.0.7",
+  "peerDependencies": {
+    "@angular/common": "^8.0.3",
+    "@angular/core": "^8.0.3"
+  }
+}
