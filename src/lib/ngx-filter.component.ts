@@ -1,10 +1,12 @@
 import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
-import { FormGroup } from "@angular/forms";
+import { FormGroup, FormControl } from "@angular/forms";
 import { FieldType } from './enums';
 import { FieldModel, OperatorModel, FilterModel } from './models';
 import { ControlDefs } from './ngx-filter-control-defs';
 import ngxFilterForm from './ngx-filter-form';
 import { NgxFilterUtil } from './ngx-filter-util';
+import { allOperators } from './ngx-filter-operators';
+import { OperatorType } from './enums/operator-type';
 
 
 @Component({
@@ -22,14 +24,11 @@ export class NgxFilterComponent extends NgxFilterUtil implements OnInit {
   @Output() filter: EventEmitter<FilterModel[]> = new EventEmitter();
 
   /**
-   * Operadores disponíveis para o campo selecionado
-   */
-  operators: OperatorModel[] = [];
-
-  /**
    * Enum com o nome dos controles do formulário
    */
   controlDefs = ControlDefs;
+
+  fieldType = FieldType;
 
   /**
    * Lista de filtros informados pelo usuário
@@ -44,18 +43,7 @@ export class NgxFilterComponent extends NgxFilterUtil implements OnInit {
   /**
    * Lista de operadores disponíveis
    */
-  allOperators: OperatorModel[] = [
-    {
-      label: 'É igual a',
-      name: '=',
-      types: [FieldType.COMBO, FieldType.DATE, FieldType.ENUM, FieldType.NUMBER, FieldType.STRING]
-    },
-    {
-      label: 'É maior ou igual a',
-      name: '>=',
-      types: [FieldType.DATE, FieldType.NUMBER]
-    }
-  ]
+
 
   constructor() {
     super();
@@ -64,6 +52,40 @@ export class NgxFilterComponent extends NgxFilterUtil implements OnInit {
   ngOnInit() {
     this.addListenerField();
     this.setInitialField();
+  }
+
+  /**
+   * Retorna o controle do valor do filtro
+   */
+  get controlValue(): FormControl {
+    return this.form.get(this.controlDefs.VALUE) as FormControl;
+  }
+
+
+  /**
+   * Retorna o tipo do campo selecionado
+   */
+  get fieldTypeSelected(): FieldType {
+    let field = this.form.get(this.controlDefs.FIELD).value as FieldModel;
+    if(field) {
+      return field.type;
+    }
+    return FieldType.STRING;
+  }
+
+  /**
+   * Define os operadores para o campo selecionado
+   */
+  get operators() {
+    let field: FieldModel = this.form.get(this.controlDefs.FIELD).value;
+    if (field) {
+      return allOperators.filter(item => item.types.includes(field.type));
+    }
+  }
+
+  get operatorTypeSelected(): OperatorType {
+    let field: OperatorModel = this.form.get(this.controlDefs.OPERATOR).value;
+    return field ? field.name : OperatorType.EQUAL;
   }
 
   compareField(f1: FieldModel, f2: FieldModel) {
@@ -76,6 +98,7 @@ export class NgxFilterComponent extends NgxFilterUtil implements OnInit {
   onAddFilter() {
     if (this.isValid(this.form)) {
       let filter = this.form.getRawValue();
+      console.log(filter)
       this.filters.push(filter);
       this.reset();
     }
@@ -93,9 +116,13 @@ export class NgxFilterComponent extends NgxFilterUtil implements OnInit {
    * Ouve evento do Enter no campo valor
    */
   onKeyUpValue(event) {
-    if(event.key === 'Enter') {
+    if (event.key === 'Enter') {
       this.onFilter();
     }
+  }
+
+  onPush(value) {
+    this.form.get(this.controlDefs.VALUE).setValue(value);
   }
 
   /**
@@ -116,7 +143,7 @@ export class NgxFilterComponent extends NgxFilterUtil implements OnInit {
    * Ouvinte das alterações no filtro selecionado
    */
   private addListenerField() {
-    this.form.get(this.controlDefs.FIELD).valueChanges.subscribe(() => this.setOperators());
+    this.form.get(this.controlDefs.FIELD).valueChanges.subscribe(() => this.setInitialOperator());
   }
 
   /**
@@ -147,20 +174,10 @@ export class NgxFilterComponent extends NgxFilterUtil implements OnInit {
    * Seleciona o primeiro operador no combobox
    */
   private setInitialOperator() {
-    this.form.get(this.controlDefs.OPERATOR).setValue(this.operators[0]);
-  }
-
-  /**
-   * Define os operadores para o campo selecionado
-   */
-  private setOperators() {
-    let field: FieldModel = this.form.get(this.controlDefs.FIELD).value;
-    if (field) {
-      this.operators = this.allOperators.filter(item => item.types.includes(field.type));
-      this.setInitialOperator();
-    } else {
-      this.operators.splice(0, this.operators.length);
+    if (this.operators) {
+      this.form.get(this.controlDefs.OPERATOR).setValue(this.operators[0]);
     }
   }
+
 
 }

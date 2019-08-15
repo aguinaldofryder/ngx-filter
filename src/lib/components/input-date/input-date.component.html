@@ -1,0 +1,27 @@
+<div class="input-group" [formGroup]="form">
+    <input 
+        [placeholder]="isBetween ? 'Data inicial': 'Critério do filtro'"
+        [bsConfig]="{ adaptivePosition: true, dateInputFormat: 'DD/MM/YYYY' }" 
+        class="form-control" 
+        [id]="controlDefs.INITIAL"
+        [formControlName]="controlDefs.INITIAL"
+        [maxDate]="maxDateInitial"
+        bsDatepicker>
+    <a  *ngIf="isBetween" class="input-group-text">
+        e
+    </a>
+    <input 
+        type="date"
+        *ngIf="isBetween"
+        placeholder="Data final"
+        class="form-control" 
+        min="2019-08-10"
+        [id]="controlDefs.LAST"
+        [formControlName]="controlDefs.LAST"
+        required>
+    <div class="input-group-prepend">
+        <button class="input-group-text" (click)="onPush()">
+            <i class="fa fa-plus"></i>
+        </button>
+    </div>
+</div>

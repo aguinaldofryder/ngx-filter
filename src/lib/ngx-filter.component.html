@@ -27,23 +27,23 @@
         </div>
         <!-- Valor do filtro -->
         <div class="col-sm-9 col-md-4 col-lg-5 col-xl-6 form-group">
-            <label [for]="controlDefs.VALUE">Contendo</label>
-            <div class="input-group">
-                <input 
-                    type="text" 
+            <!-- Texto -->
+                <input *ngIf="fieldTypeSelected === fieldType.STRING || fieldTypeSelected === fieldType.NUMBER"
+                    [type]="fieldTypeSelected === fieldType.STRING ? 'text' : 'number'" 
                     class="form-control" 
                     [id]="controlDefs.VALUE" 
                     [formControlName]="controlDefs.VALUE"
                     placeholder="Critério do filtro"
                     (keyup)="onKeyUpValue($event)">
-                    <div class="input-group-prepend">
-                        <button 
-                            class="input-group-text"
-                            (click)="onAddFilter()">
-                            <i class="fa fa-plus"></i>
-                        </button>
-                    </div>
-              </div>
+
+                <!-- Data -->
+                <ngx-input-date  
+                    *ngIf="fieldTypeSelected === fieldType.DATE" 
+                    [form-control]="controlValue"
+                    [operator-type]="operatorTypeSelected"
+                    (change)="onPush($event)"
+                    (push)="onAddFilter()">
+                </ngx-input-date>
             </div>
         <div class="col-sm-3 col-md-3 col-lg-2 form-group">
             <button
