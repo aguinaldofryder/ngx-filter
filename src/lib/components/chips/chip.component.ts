@@ -16,7 +16,7 @@ export class ChipComponent {
     @Output() remove: EventEmitter<FilterModel> = new EventEmitter();
 
     get label(): string {
-        return `${this.filter.field.label} ${this.filter.operator.label.toLowerCase()} ${this.filter.value}`
+        return `${this.filter.field.label} ${this.filter.operator.label.toLowerCase()} ${this.filter.value.formattedValue}`
     }
 
     /**

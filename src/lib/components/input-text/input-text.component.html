@@ -1,0 +1,14 @@
+<div class="input-group" [formGroup]="form">
+    <input 
+        type="text" 
+        class="form-control" 
+        [id]="controlDefs.VALUE" 
+        [formControlName]="controlDefs.VALUE"
+        placeholder="Critério do filtro"
+        (keyup)="onKeyUpValue($event)">
+        <div class="input-group-prepend">
+            <button class="input-group-text" (click)="onPush()">
+                <i class="fa fa-plus"></i>
+            </button>
+        </div>
+</div>

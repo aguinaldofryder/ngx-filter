@@ -67,7 +67,7 @@ export class NgxFilterComponent extends NgxFilterUtil implements OnInit {
    */
   get fieldTypeSelected(): FieldType {
     let field = this.form.get(this.controlDefs.FIELD).value as FieldModel;
-    if(field) {
+    if (field) {
       return field.type;
     }
     return FieldType.STRING;
@@ -95,10 +95,9 @@ export class NgxFilterComponent extends NgxFilterUtil implements OnInit {
   /**
    * Adiciona um filtro a lista
    */
-  onAddFilter() {
+  async onAddFilter() {
     if (this.isValid(this.form)) {
       let filter = this.form.getRawValue();
-      console.log(filter)
       this.filters.push(filter);
       this.reset();
     }
@@ -110,19 +109,6 @@ export class NgxFilterComponent extends NgxFilterUtil implements OnInit {
   async onFilter() {
     await this.onAddFilter();
     this.filter.emit(this.filters);
-  }
-
-  /**
-   * Ouve evento do Enter no campo valor
-   */
-  onKeyUpValue(event) {
-    if (event.key === 'Enter') {
-      this.onFilter();
-    }
-  }
-
-  onPush(value) {
-    this.form.get(this.controlDefs.VALUE).setValue(value);
   }
 
   /**
@@ -143,8 +129,12 @@ export class NgxFilterComponent extends NgxFilterUtil implements OnInit {
    * Ouvinte das alterações no filtro selecionado
    */
   private addListenerField() {
-    this.form.get(this.controlDefs.FIELD).valueChanges.subscribe(() => this.setInitialOperator());
+    this.form.get(this.controlDefs.FIELD).valueChanges.subscribe(() => {
+      this.setInitialOperator()
+      this.form.get(this.controlDefs.VALUE).reset();
+    });
   }
+
 
   /**
    * Retorna o índice do filtro

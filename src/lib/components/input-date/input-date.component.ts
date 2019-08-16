@@ -4,6 +4,10 @@ import { initFormInpuDate } from './input-date-form';
 import { FieldType } from '../../enums';
 import { OperatorType } from '../../enums/operator-type';
 import { ControlDefs } from './control-defs';
+import { FilterModel } from '../../models';
+import { formatDate } from '@angular/common';
+import { ValueModel } from '../../models/value';
+import { InputBase } from '../base/input-base';
 
 @Component({
   selector: 'ngx-input-date',
@@ -11,38 +15,36 @@ import { ControlDefs } from './control-defs';
   styleUrls: ['./input-date.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class InputDateComponent implements OnInit {
-
-  @Input('form-control') formControl: FormControl;
+export class InputDateComponent extends InputBase implements OnInit {
 
   @Input('operator-type') operatorType: OperatorType;
 
-  @Output() change: EventEmitter<any> = new EventEmitter();
-
-  @Output() push: EventEmitter<any> = new EventEmitter();
-
   controlDefs = ControlDefs;
 
-  form: FormGroup;
-
   constructor() {
-    this.form = initFormInpuDate();
+    super();
   }
-
+  
   ngOnInit() {
     this.form.valueChanges.subscribe(() => {
       this.validateForm();
-      this.change.emit(this.form.valid ? [this.form.get(this.controlDefs.INITIAL).value,
-      this.form.get(this.controlDefs.LAST).value] : null);
     })
   }
-
+  
+  initForm() {
+    this.form = initFormInpuDate();
+  }
   /**
    * Verifica se a condição é "Entre"
    */
   get isBetween(): boolean {
     const result = this.operatorType === OperatorType.BETWEEN;
     return result;
+  }
+
+  get arrayDate(): Date[] {
+    return [this.form.get(this.controlDefs.INITIAL).value,
+      this.form.get(this.controlDefs.LAST).value];
   }
 
   get minDateLast(): Date {
@@ -55,6 +57,7 @@ export class InputDateComponent implements OnInit {
 
   onPush() {
     if (this.form.valid) {
+      this.formControl.setValue(this.formatFilterDate(this.arrayDate));
       this.push.emit();
     } else {
       this.form.get(this.controlDefs.INITIAL).markAsTouched();
@@ -75,5 +78,28 @@ export class InputDateComponent implements OnInit {
         }
       }
     })
+  }
+
+  /**
+   * Formata o filtro do tipo data
+   * @param filter 
+   */
+  private formatFilterDate(value: Date[]) {
+    if (this.operatorType === OperatorType.BETWEEN) {
+      return {
+        formattedValue: value.map(item => this.formatDate(item)).join(' e '),
+        value: value
+      }
+    } else {
+      return {
+        formattedValue: this.formatDate(value[0]),
+        value: value[0]
+      }
+    }
+  }
+
+
+  private formatDate(date: string | number | Date): string {
+    return formatDate(date, 'dd/MM/yyy', 'pt');
   }
 }

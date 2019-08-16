@@ -11,13 +11,14 @@
         e
     </a>
     <input 
-        type="date"
         *ngIf="isBetween"
         placeholder="Data final"
+        [bsConfig]="{ adaptivePosition: true, dateInputFormat: 'DD/MM/YYYY' }" 
         class="form-control" 
-        min="2019-08-10"
+        [minDate]="minDateLast"
         [id]="controlDefs.LAST"
         [formControlName]="controlDefs.LAST"
+        bsDatepicker
         required>
     <div class="input-group-prepend">
         <button class="input-group-text" (click)="onPush()">

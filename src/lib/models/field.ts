@@ -30,4 +30,9 @@ export interface FieldModel {
      * Combo lazy-load
      */
     combo?: ComboModel;
+
+    /**
+     * Mascara para formtação do filtro
+     */
+    mask?: string;
 }

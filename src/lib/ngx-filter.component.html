@@ -1,10 +1,9 @@
 <form 
 [formGroup]="form" 
     novalidate>
-    <div class="row d-flex align-items-end">
+    <div class="row d-flex">
         <!-- Field -->
         <div class="col-sm-5 col-md-3 col-xl-2 form-group">
-            <label [for]="controlDefs.FIELD">Campo</label>
             <select 
                 class="form-control" 
                 [ngClass]="{ 'is-invalid': validate(controlDefs.FIELD) }"
@@ -16,7 +15,6 @@
         </div>
         <!-- Condição -->
         <div class="col-sm-4 col-md-2 form-group">
-            <label [for]="controlDefs.OPERATOR">Condição</label>
             <select 
                 class="form-control" 
                 [ngClass]="{ 'is-invalid': validate(controlDefs.OPERATOR) }"
@@ -28,20 +26,17 @@
         <!-- Valor do filtro -->
         <div class="col-sm-9 col-md-4 col-lg-5 col-xl-6 form-group">
             <!-- Texto -->
-                <input *ngIf="fieldTypeSelected === fieldType.STRING || fieldTypeSelected === fieldType.NUMBER"
-                    [type]="fieldTypeSelected === fieldType.STRING ? 'text' : 'number'" 
-                    class="form-control" 
-                    [id]="controlDefs.VALUE" 
-                    [formControlName]="controlDefs.VALUE"
-                    placeholder="Critério do filtro"
-                    (keyup)="onKeyUpValue($event)">
+                <ngx-input-text 
+                    *ngIf="fieldTypeSelected === fieldType.STRING"
+                    [form-control]="controlValue"
+                    (push)="onAddFilter()">
+                </ngx-input-text>
 
                 <!-- Data -->
                 <ngx-input-date  
                     *ngIf="fieldTypeSelected === fieldType.DATE" 
                     [form-control]="controlValue"
                     [operator-type]="operatorTypeSelected"
-                    (change)="onPush($event)"
                     (push)="onAddFilter()">
                 </ngx-input-date>
             </div>
