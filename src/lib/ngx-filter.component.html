@@ -28,6 +28,7 @@
             <!-- Texto -->
                 <ngx-input-text 
                     *ngIf="fieldTypeSelected === fieldType.STRING"
+                    [field]="fieldSelected"
                     [form-control]="controlValue"
                     (push)="onAddFilter()">
                 </ngx-input-text>

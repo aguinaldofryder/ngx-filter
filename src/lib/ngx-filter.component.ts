@@ -1,12 +1,12 @@
-import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
-import { FormGroup, FormControl } from "@angular/forms";
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { FormControl, FormGroup } from "@angular/forms";
 import { FieldType } from './enums';
-import { FieldModel, OperatorModel, FilterModel } from './models';
+import { OperatorType } from './enums/operator-type';
+import { FieldModel, FilterModel, OperatorModel } from './models';
 import { ControlDefs } from './ngx-filter-control-defs';
 import ngxFilterForm from './ngx-filter-form';
-import { NgxFilterUtil } from './ngx-filter-util';
 import { allOperators } from './ngx-filter-operators';
-import { OperatorType } from './enums/operator-type';
+import { NgxFilterUtil } from './ngx-filter-util';
 
 
 @Component({
@@ -65,10 +65,16 @@ export class NgxFilterComponent extends NgxFilterUtil implements OnInit {
   /**
    * Retorna o tipo do campo selecionado
    */
+  get fieldSelected(): FieldModel {
+    return this.form.get(this.controlDefs.FIELD).value as FieldModel;
+  }
+
+  /**
+   * Retorna o tipo do campo selecionado
+   */
   get fieldTypeSelected(): FieldType {
-    let field = this.form.get(this.controlDefs.FIELD).value as FieldModel;
-    if (field) {
-      return field.type;
+    if (this.fieldSelected) {
+      return this.fieldSelected.type;
     }
     return FieldType.STRING;
   }

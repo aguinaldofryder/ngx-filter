@@ -1,6 +1,7 @@
 import { FieldType } from '../enums/field-type';
 import { OptionModel } from './option';
 import { ComboModel } from './combo';
+import { PipeTransform } from '@angular/core';
 
 /**
  * Model para definição do atributo a ser diponibilizado para filtro
@@ -32,7 +33,7 @@ export interface FieldModel {
     combo?: ComboModel;
 
     /**
-     * Mascara para formtação do filtro
+     * Função para formatação do campo
      */
-    mask?: string;
+    pipe?: PipeTransform;
 }

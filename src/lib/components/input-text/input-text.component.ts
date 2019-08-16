@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { InputBase } from '../base/input-base';
 import { ValueModel } from '../../models/value';
-import { initFormInpuText } from './input-date-form';
+import { initFormInpuText } from './input-text-form';
 import { ControlDefs } from './control-defs';
 
 @Component({
@@ -17,8 +17,7 @@ export class InputTextComponent extends InputBase implements OnInit {
     super();
   }
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   get value(): string {
     return this.form.get(this.controlDefs.VALUE).value;
@@ -29,9 +28,15 @@ export class InputTextComponent extends InputBase implements OnInit {
   }
 
   async onPush() {
-    let data: ValueModel = { value: this.value, formattedValue: this.value }
-    await this.formControl.setValue(data);
-    this.push.emit();
-    this.reset();
+    if(this.form.valid) {
+      let data: ValueModel = {
+        value: this.value,
+        formattedValue: this.field.pipe ?
+          this.field.pipe.transform(this.value) : this.value
+      }
+      await this.formControl.setValue(data);
+      this.push.emit();
+      this.reset();
+    }
   }
 }

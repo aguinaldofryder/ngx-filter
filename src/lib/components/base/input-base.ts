@@ -1,9 +1,12 @@
 import { Input, EventEmitter, Output } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { FieldModel } from '../../models';
 
 export abstract class InputBase {
 
     @Input('form-control') formControl: FormControl;
+
+    @Input() field: FieldModel;
 
     @Output() push: EventEmitter<any> = new EventEmitter();
 
@@ -26,6 +29,7 @@ export abstract class InputBase {
      */
     onKeyUpValue(event) {
         if (event.key === 'Enter') {
+            debugger
             this.onPush();
         }
     }
